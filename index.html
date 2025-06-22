@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Currency Calculator</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        .result { margin-top: 1em; font-weight: bold; }
+        input, button { font-size: 1em; }
+    </style>
+</head>
+<body>
+    <h2>Currency Calculator</h2>
+    <form id="calcForm" autocomplete="off">
+        <label>
+            Currency amount: <input type="number" id="amountA" min="1" required>
+        </label>
+        <br>
+        <label>
+            Ratio (can use division, e.g., 1/2): <input type="text" id="ratio" required>
+        </label>
+        <br>
+        <button type="submit">Calculate</button>
+    </form>
+    <div class="result" id="result"></div>
+
+    <script>
+        function calculateMaxTrade(amountA, price) {
+            for (let a = amountA; a > 0; a--) {
+                let b = a / price;
+                if (Math.abs(b - Math.round(b)) < 0.000001) {
+                    return { aSold: a, bReceived: Math.round(b) };
+                }
+            }
+            return { aSold: 0, bReceived: 0 };
+        }
+
+        document.getElementById('calcForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const amountA = parseInt(document.getElementById('amountA').value, 10);
+            const ratioStr = document.getElementById('ratio').value.trim();
+            const resultDiv = document.getElementById('result');
+
+            if (!(amountA > 0)) {
+                resultDiv.textContent = "Currency amount should be a positive integer";
+                return;
+            }
+
+            let price;
+            try {
+                // Only allow numbers and slashes for safety
+                if (!/^[\d\s.\/+-]+$/.test(ratioStr)) throw new Error();
+                price = eval(ratioStr);
+                if (typeof price !== "number" || !isFinite(price)) throw new Error();
+            } catch {
+                resultDiv.textContent = "Error parsing ratio";
+                return;
+            }
+
+            const result = calculateMaxTrade(amountA, price);
+
+            if (result.aSold > 0) {
+                resultDiv.textContent = `${result.aSold} ${result.bReceived}`;
+            } else {
+                resultDiv.textContent = "Error";
+            }
+        });
+    </script>
+</body>
+</html>
