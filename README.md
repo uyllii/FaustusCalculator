@@ -3,4 +3,5 @@ Calculates optimal exchange ratios for the Path of Exile currency exchange servi
 
 
 Original Code written in C# from reddit user "cybert0urist" can be found here: https://codefile.io/f/ChdczlJ9vb
+
 First version of the web version was created by GitHub Copilot. 
