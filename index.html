@@ -139,7 +139,7 @@
         <form id="calcForm" autocomplete="off">
             <label>
                 Currency amount you want to buy/sell:
-                <input type="number" id="amountA" min="1" required>
+                <input type="number" id="amountA" min="1" required autofocus>
             </label>
             <label>
                 Ratio you want to buy/sell at (can use division, e.g., 1/2):
@@ -210,7 +210,12 @@
             const result = calculateMaxTrade(amountA, price, buySell);
 
             if (result.aSold > 0) 
+            {
                 resultDiv.innerHTML = `Input this into the Faustus trade:<br>${result.aSold}:${result.bReceived}`;
+                document.getElementById('amountA').value = '';
+                document.getElementById('ratio').value = '';
+                document.getElementById('amountA').focus();
+            }
             else 
                 resultDiv.textContent = "Error";
         });
