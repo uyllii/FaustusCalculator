@@ -4,66 +4,215 @@
     <meta charset="UTF-8">
     <title>Currency Calculator</title>
     <style>
-        body { font-family: sans-serif; margin: 2em; }
-        .result { margin-top: 1em; font-weight: bold; }
-        input, button { font-size: 1em; }
+        html, body 
+        {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body 
+        {
+            min-height: 100vh;
+            background: #2d2d2d;
+            color: #f8f8f2;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+        .container 
+        {
+            flex: 1 0 auto;
+            max-width: 430px;
+            margin: 40px auto 0 auto;
+            background: #232323;
+            border-radius: 10px;
+            padding: 32px 28px 22px 28px;
+            box-shadow: 0 4px 18px #0007;
+        }
+        h2 
+        {
+            margin-top: 0;
+            color: #4dc3fa; 
+            letter-spacing: 0.5px;
+            font-size: 1.55em;
+            text-align: center;
+        }
+        form label 
+        {
+            display: block;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            color: #f8f8f2;
+        }
+        input[type="number"], input[type="text"] 
+        {
+            width: 120px;
+            padding: 8px;
+            font-size: 1.05em;
+            border-radius: 5px;
+            border: none;
+            background: #444;
+            color: #f8f8f2;
+            margin-left: 10px;
+        }
+        input[type="number"]:focus, input[type="text"]:focus 
+        {
+            outline: 2px solid #4dc3fa; 
+        }
+        .radio-group 
+        {
+            display: flex;
+            gap: 1.5em;
+        }
+        .radio-group label 
+        {
+            margin-bottom: 0;
+            margin-right: 25px;
+            font-size: 1.07em;
+            font-weight: normal;
+            color: #f8f8f2;
+        }
+        input[type="radio"] 
+        {
+            accent-color: #4dc3fa; 
+        }
+        button 
+        {
+            background: linear-gradient(90deg, #4dc3fa 0%, #3f8efc 100%);
+            border: none;
+            color: #232323;
+            font-weight: bold;
+            font-size: 1.12em;
+            border-radius: 6px;
+            padding: 8px 42px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            box-shadow: 0 2px 7px #0005;
+            transition: background 0.15s;
+        }
+        button:hover 
+        {
+            background: linear-gradient(90deg, #67e8f9 0%, #3f8efc 100%);
+        }
+        .result 
+        {
+            margin-top: 22px;
+            font-size: 1.18em;
+            font-weight: bold;
+            text-align: center;
+            color: #4dc3fa; 
+            min-height: 1.5em;
+        }
+        .footer 
+        {
+            flex-shrink: 0;
+            width: 100%;
+            background: #232323;
+            color: #bbb;
+            text-align: center;
+            padding: 16px 0 13px 0;
+            font-size: 0.97em;
+            border-top: 1.5px solid #191919;
+            letter-spacing: 0.05em;
+            margin-top: 38px;
+        }
+        @media (max-width: 600px) 
+        {
+            .container 
+            {
+                margin-top: 10vw;
+                max-width: 97vw;
+                padding: 18px 6vw 15px 6vw;
+            }
+            .footer 
+            {
+                font-size: 0.93em;
+                padding: 12px 0 9px 0;
+            }
+        }
     </style>
 </head>
 <body>
-    <h2>Currency Calculator</h2>
-    <form id="calcForm" autocomplete="off">
-        <label>
-            Currency amount: <input type="number" id="amountA" min="1" required>
-        </label>
-        <br>
-        <label>
-            Ratio (can use division, e.g., 1/2): <input type="text" id="ratio" required>
-        </label>
-        <br>
-        <button type="submit">Calculate</button>
-    </form>
-    <div class="result" id="result"></div>
-
+    <div class="container">
+        <h2>Currency Calculator</h2>
+        <form id="calcForm" autocomplete="off">
+            <label>
+                Currency amount you want to buy/sell:
+                <input type="number" id="amountA" min="1" required>
+            </label>
+            <label>
+                Ratio you want to buy/sell at (can use division, e.g., 1/2):
+                <input type="text" id="ratio" required>
+            </label>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="buySell" value="buy" checked> Buy
+                </label>
+                <label>
+                    <input type="radio" name="buySell" value="sell"> Sell
+                </label>
+            </div>
+            <button type="submit">Calculate</button>
+        </form>
+        <div class="result" id="result"></div>
+    </div>
+    <div class="footer">
+        <a href="https://github.com/Hagigamer/FaustusCalculator">Source Code</a><br>
+        Made by Hagigamer. Original C# code from cybert0urist on reddit.<br>
+        <a href="https://github.com/Hagigamer/FaustusCalculator/issues">Please make change requests or bug reports here.</a>
+    </div>
     <script>
-        function calculateMaxTrade(amountA, price) {
-            for (let a = amountA; a > 0; a--) {
+        function calculateMaxTrade(amountA, price, buySell) 
+        {
+            for (let a = amountA; a > 0; a--) 
+            {
                 let b = a / price;
-                if (Math.abs(b - Math.round(b)) < 0.000001) {
-                    return { aSold: a, bReceived: Math.round(b) };
-                }
+                if (Math.abs(b - Math.round(b)) < 0.000001) 
+                    if (buySell == "buy")
+                        return { aSold: a, bReceived: Math.round(b) };
+                    else
+                        return { aSold: Math.round(b), bReceived: a };
             }
             return { aSold: 0, bReceived: 0 };
         }
 
-        document.getElementById('calcForm').addEventListener('submit', function(e) {
+        document.getElementById('calcForm').addEventListener('submit', function(e) 
+        {
             e.preventDefault();
             const amountA = parseInt(document.getElementById('amountA').value, 10);
             const ratioStr = document.getElementById('ratio').value.trim();
+            const buySell = document.querySelector('input[name="buySell"]:checked').value;
             const resultDiv = document.getElementById('result');
 
-            if (!(amountA > 0)) {
+            if (!(amountA > 0)) 
+            {
                 resultDiv.textContent = "Currency amount should be a positive integer";
                 return;
             }
 
             let price;
-            try {
+            try 
+            {
                 // Only allow numbers and slashes for safety
-                if (!/^[\d\s.\/+-]+$/.test(ratioStr)) throw new Error();
+                if (!/^[\d\s.\/+-]+$/.test(ratioStr)) 
+                    throw new Error("invalid characters.");
                 price = eval(ratioStr);
-                if (typeof price !== "number" || !isFinite(price)) throw new Error();
-            } catch {
+                if (typeof price !== "number" || !isFinite(price)) 
+                    throw new Error("not a Number.");
+            } 
+            catch 
+            {
                 resultDiv.textContent = "Error parsing ratio";
                 return;
             }
 
-            const result = calculateMaxTrade(amountA, price);
+            const result = calculateMaxTrade(amountA, price, buySell);
 
-            if (result.aSold > 0) {
-                resultDiv.textContent = `${result.aSold} ${result.bReceived}`;
-            } else {
+            if (result.aSold > 0) 
+                resultDiv.innerHTML = `Input this into the Faustus trade:<br>${result.aSold}:${result.bReceived}`;
+            else 
                 resultDiv.textContent = "Error";
-            }
         });
     </script>
 </body>
