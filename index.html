@@ -139,12 +139,12 @@
         <form id="calcForm" autocomplete="off">
             <label>
                 Currency amount you want to buy/sell:
-                <input type="number" id="amountA" min="1" required autofocus>
             </label>
+            <input type="number" id="amountA" min="1" required autofocus>
             <label>
                 Ratio you want to buy/sell at (can use division, e.g., 1/2):
-                <input type="text" id="ratio" required>
             </label>
+            <input type="text" id="ratio" required>
             <div class="radio-group">
                 <label>
                     <input type="radio" name="buySell" value="buy" checked> Buy
@@ -180,10 +180,11 @@
         document.getElementById('calcForm').addEventListener('submit', function(e) 
         {
             e.preventDefault();
-            const amountA = parseInt(document.getElementById('amountA').value, 10);
-            const ratioStr = document.getElementById('ratio').value.trim();
-            const buySell = document.querySelector('input[name="buySell"]:checked').value;
-            const resultDiv = document.getElementById('result');
+            var amountA = parseInt(document.getElementById('amountA').value, 10);
+            var ratioStr = document.getElementById('ratio').value.trim();
+            ratioStr = ratioStr.replace(/,/g,".");
+            var buySell = document.querySelector('input[name="buySell"]:checked').value;
+            var resultDiv = document.getElementById('result');
 
             if (!(amountA > 0)) 
             {
@@ -207,7 +208,7 @@
                 return;
             }
 
-            const result = calculateMaxTrade(amountA, price, buySell);
+            var result = calculateMaxTrade(amountA, price, buySell);
 
             if (result.aSold > 0) 
             {
