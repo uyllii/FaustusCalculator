@@ -1,225 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Currency Calculator</title>
-    <style>
-        html, body 
-        {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-        body 
-        {
-            min-height: 100vh;
-            background: #2d2d2d;
-            color: #f8f8f2;
-            font-family: 'Segoe UI', 'Arial', sans-serif;
-            display: flex;
-            flex-direction: column;
-        }
-        .container 
-        {
-            flex: 1 0 auto;
-            max-width: 430px;
-            margin: 40px auto 0 auto;
-            background: #232323;
-            border-radius: 10px;
-            padding: 32px 28px 22px 28px;
-            box-shadow: 0 4px 18px #0007;
-        }
-        h2 
-        {
-            margin-top: 0;
-            color: #4dc3fa; 
-            letter-spacing: 0.5px;
-            font-size: 1.55em;
-            text-align: center;
-        }
-        form label 
-        {
-            display: block;
-            margin-bottom: 20px;
-            font-size: 1.1em;
-            color: #f8f8f2;
-        }
-        input[type="number"], input[type="text"] 
-        {
-            width: 120px;
-            padding: 8px;
-            font-size: 1.05em;
-            border-radius: 5px;
-            border: none;
-            background: #444;
-            color: #f8f8f2;
-            margin-left: 10px;
-        }
-        input[type="number"]:focus, input[type="text"]:focus 
-        {
-            outline: 2px solid #4dc3fa; 
-        }
-        .radio-group 
-        {
-            display: flex;
-            gap: 1.5em;
-        }
-        .radio-group label 
-        {
-            margin-bottom: 0;
-            margin-right: 25px;
-            font-size: 1.07em;
-            font-weight: normal;
-            color: #f8f8f2;
-        }
-        input[type="radio"] 
-        {
-            accent-color: #4dc3fa; 
-        }
-        button 
-        {
-            background: linear-gradient(90deg, #4dc3fa 0%, #3f8efc 100%);
-            border: none;
-            color: #232323;
-            font-weight: bold;
-            font-size: 1.12em;
-            border-radius: 6px;
-            padding: 8px 42px;
-            cursor: pointer;
-            margin-top: 10px;
-            margin-bottom: 5px;
-            box-shadow: 0 2px 7px #0005;
-            transition: background 0.15s;
-        }
-        button:hover 
-        {
-            background: linear-gradient(90deg, #67e8f9 0%, #3f8efc 100%);
-        }
-        .result 
-        {
-            margin-top: 22px;
-            font-size: 1.18em;
-            font-weight: bold;
-            text-align: center;
-            color: #4dc3fa; 
-            min-height: 1.5em;
-        }
-        .footer 
-        {
-            flex-shrink: 0;
-            width: 100%;
-            background: #232323;
-            color: #bbb;
-            text-align: center;
-            padding: 16px 0 13px 0;
-            font-size: 0.97em;
-            border-top: 1.5px solid #191919;
-            letter-spacing: 0.05em;
-            margin-top: 38px;
-        }
-        @media (max-width: 600px) 
-        {
-            .container 
-            {
-                margin-top: 10vw;
-                max-width: 97vw;
-                padding: 18px 6vw 15px 6vw;
-            }
-            .footer 
-            {
-                font-size: 0.93em;
-                padding: 12px 0 9px 0;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trade Calculator</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+    }
+    .input-group {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .input-group input {
+      font-size: 2rem;
+      padding: 1rem;
+      flex: 1;
+      box-sizing: border-box;
+    }
+    .result {
+      font-size: 1.5rem;
+      margin-top: 1rem;
+    }
+    .copyable {
+      cursor: pointer;
+      user-select: none;
+      padding: 0.5rem;
+      display: inline-block;
+      margin: 0.25rem;
+      background: #f0f0f0;
+      border-radius: 5px;
+    }
+    .copyable:hover {
+      background: #d0ffd0;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Faustus Calculator</h2>
-        <form id="calcForm" autocomplete="off">
-            <label>
-                Currency amount you want to buy/sell:
-            </label>
-            <input type="number" id="amountA" min="1" required autofocus>
-            <label>
-                Ratio you want to buy/sell at (can use division, e.g., 1/2):
-            </label>
-            <input type="text" id="ratio" required>
-            <div class="radio-group">
-                <label>
-                    <input type="radio" name="buySell" value="buy" checked> Buy
-                </label>
-                <label>
-                    <input type="radio" name="buySell" value="sell"> Sell
-                </label>
-            </div>
-            <button type="submit">Calculate</button>
-        </form>
-        <div class="result" id="result"></div>
-    </div>
-    <div class="footer">
-        <a href="https://github.com/Hagigamer/FaustusCalculator">Source Code</a><br>
-        Made by Hagigamer. Original C# code from /u/cybert0urist on reddit.<br>
-        <a href="https://github.com/Hagigamer/FaustusCalculator/issues">Please make change requests or bug reports here.</a>
-    </div>
-    <script>
-        function calculateMaxTrade(amountA, price, buySell) 
-        {
-            for (let a = amountA; a > 0; a--) 
-            {
-                let b = a / price;
-                if (Math.abs(b - Math.round(b)) < 0.000001) 
-                    if (buySell == "buy")
-                        return { aSold: a, bReceived: Math.round(b) };
-                    else
-                        return { aSold: Math.round(b), bReceived: a };
-            }
-            return { aSold: 0, bReceived: 0 };
+  <h1>Trade Calculator</h1>
+  <div class="input-group">
+    <input id="quantity" type="number" placeholder="Quantity" tabindex="1" />
+    <input id="ratio" type="number" step="any" placeholder="Ideal Ratio" tabindex="2" />
+  </div>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    function calculateTrade(quantity, idealRatio) {
+      const buy = Math.ceil(quantity * idealRatio);
+      const sell = Math.floor(quantity * idealRatio);
+      return { sell, buy };
+    }
+
+    const quantityInput = document.getElementById('quantity');
+    const ratioInput = document.getElementById('ratio');
+    const resultDiv = document.getElementById('result');
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        console.log(`Copied: ${text}`);
+      });
+    }
+
+    function updateResult() {
+      const quantity = parseFloat(quantityInput.value);
+      const ratio = parseFloat(ratioInput.value);
+
+      if (!isNaN(quantity) && !isNaN(ratio)) {
+        const { sell, buy } = calculateTrade(quantity, ratio);
+        resultDiv.innerHTML = `
+          <span class="copyable" onclick="copyToClipboard(${sell})">Sell: ${sell}</span>
+          <span class="copyable" onclick="copyToClipboard(${buy})">Buy: ${buy}</span>
+        `;
+      } else {
+        resultDiv.textContent = '';
+      }
+    }
+
+    quantityInput.addEventListener('input', updateResult);
+    ratioInput.addEventListener('input', updateResult);
+
+    // Highlight text on focus
+    quantityInput.addEventListener('focus', (e) => e.target.select());
+    ratioInput.addEventListener('focus', (e) => e.target.select());
+
+    // Keep tab navigation between the two inputs
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        const active = document.activeElement;
+        if (active === quantityInput && !e.shiftKey) {
+          e.preventDefault();
+          ratioInput.focus();
+        } else if (active === ratioInput && e.shiftKey) {
+          e.preventDefault();
+          quantityInput.focus();
+        } else if (active === ratioInput && !e.shiftKey) {
+          e.preventDefault();
+          quantityInput.focus();
         }
-
-        document.getElementById('calcForm').addEventListener('submit', function(e) 
-        {
-            e.preventDefault();
-            var amountA = parseInt(document.getElementById('amountA').value, 10);
-            var ratioStr = document.getElementById('ratio').value.trim();
-            ratioStr = ratioStr.replace(/,/g,".");
-            var buySell = document.querySelector('input[name="buySell"]:checked').value;
-            var resultDiv = document.getElementById('result');
-
-            if (!(amountA > 0)) 
-            {
-                resultDiv.textContent = "Currency amount should be a positive integer";
-                return;
-            }
-
-            let price;
-            try 
-            {
-                // Only allow numbers and slashes for safety
-                if (!/^[\d\s.\/+-]+$/.test(ratioStr)) 
-                    throw new Error("invalid characters.");
-                price = eval(ratioStr);
-                if (typeof price !== "number" || !isFinite(price)) 
-                    throw new Error("not a Number.");
-            } 
-            catch 
-            {
-                resultDiv.textContent = "Error parsing ratio";
-                return;
-            }
-
-            var result = calculateMaxTrade(amountA, price, buySell);
-
-            if (result.aSold > 0) 
-            {
-                resultDiv.innerHTML = `Input this into the Faustus trade:<br>${result.aSold}:${result.bReceived}`;
-                document.getElementById('amountA').value = '';
-                document.getElementById('ratio').value = '';
-                document.getElementById('amountA').focus();
-            }
-            else 
-                resultDiv.textContent = "Error";
-        });
-    </script>
+      }
+    });
+  </script>
 </body>
 </html>
